@@ -5,6 +5,7 @@ from embed_video.fields import EmbedVideoField
 
 # Create your models here.
 
+
 class movieCertificate(models.Model):
     certificate_name=models.CharField(max_length=50)
     certificate_des=models.TextField(max_length=250, blank=True, null=True)
@@ -55,3 +56,4 @@ class Movies(models.Model):
     def __str__(self):
         return self.movie_title
     
+

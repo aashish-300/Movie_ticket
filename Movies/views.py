@@ -19,3 +19,7 @@ from django.shortcuts import render,redirect
 #          print("Hello")
 #     mydict['form']=form
 #     return render(request,'templates/Movies/add_movie.html',mydict)
+
+# def buyTickets(request):
+#     data = request.body
+#     print(data)
