@@ -13,10 +13,21 @@ movieDate.addEventListener("change", () => {
   }
 });
 
-const BookTicketfunc = () => {
-    console.log("inside bok tickt");
-    console.log(date);
-    const { data } =  axios.post("localhost:8000/movie/ticket/date", {
-      date});
-    console.log(data);
+const BookTicketfunc = async () => {
+  console.log("inside box ticket");
+  console.log(date);
+  const { data } =  await axios.post("http://127.0.0.1:8000/movies/ticket/date", {
+    date});
+  console.log(data);
+  // fetch("http://127.0.0.1:8000/movies/ticket/date", {
+  //   method: "POST",
+  //   headers: {
+  //     Accept: "application/json",
+  //     "Content-Type": "application/json",
+  //     "Access-Control-Allow-Origin": "*",
+  //   },
+  //   body: JSON.stringify({ id: 78912 }),
+  // })
+  //   .then((response) => response.json())
+  //   .then((response) => console.log(JSON.stringify(response)));
 };
