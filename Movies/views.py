@@ -31,6 +31,7 @@ import json
 #     data = request.body
 #     print(data)
 
+@csrf_exempt
 def ticket_date(request):
     try:
         if request.method == 'POST':
@@ -50,9 +51,9 @@ def ticket_date(request):
         }
         return HttpResponse(response)
         
-
 @csrf_exempt
 def book_ticket(request):
+    print('here')
     if request.method == 'POST':
         data = data = json.loads(request.body)
         Ticket.objects.create(
