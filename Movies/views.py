@@ -31,25 +31,28 @@ def book_ticket(request):
     return HttpResponse("<h3>Something went wrong!</h3>")
 
 
-# @login_required(login_url="signin")
+@login_required(login_url="signin")
 @csrf_exempt
 def ticket_date(request):
     if request.method == "POST":
         try:
             data = json.loads(request.body)
             date = data["date"]
+            print("---------------")
             print(date)
             request.session["movie_date"] = date
             movie_title = request.session["movie_title"]  # movie_date = date
             print(movie_title)  # |
-            query_set = Ticket.objects.filter(movie_title="john wick").values_list(
+            query_set = Ticket.objects.filter(movie_title=movie_title,movie_date=date).values_list(
                 "seat_number", flat=True
             )  # no flat=True means it returns list of tuples
             seats = list(query_set)
+
+            print(seats)
             seats = " ".join(seats)
             data = {"reserved_seats": seats}
             print(data)
-            return render(request, "Movies/seatView.html", data)
+            return render(request, "Movies/seatView.html", context=data)
         except Exception as e:
             print(e)
             return HttpResponse("<h3>something went wrong</h3>") 
