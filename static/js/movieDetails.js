@@ -25,6 +25,8 @@ const BookTicketfunc = async () => {
       date,
     }
   );
+  console.log('------------here is data')
+  console.log(data)
   if(movieDate.value === ""){
     alert('please select a date');
   }else {

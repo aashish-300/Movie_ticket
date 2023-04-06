@@ -1,7 +1,17 @@
 window.onload = async () => {
+  const { data } = await axios.get(
+    "http://localhost:8000/movies/reservedseats"
+  );
+  console.log("here is reserved");
+  console.log(typeof data.reserved_seats);
+  bookedSeatNum = data.reserved_seats.split(" ");
+  console.log(bookedSeatNum);
   ReservedSeat.forEach((e, index) => {
+    // console.log(e)
     let seatReserved = e.getAttribute("data-value");
-    if (bookedSeatNum.includes(Number(seatReserved))) {
+    console.log(seatReserved);
+
+    if (bookedSeatNum.includes(seatReserved)) {
       e.classList.remove("selected");
       e.classList.add("reserved");
       console.log("booked");
@@ -17,7 +27,7 @@ window.onload = async () => {
 };
 const ReservedSeat = document.querySelectorAll(".seat");
 const seats = document.querySelectorAll(".seat:not(.reserved)");
-const movie = document.getElementById("movie");
+// const movie = document.getElementById("movie");
 const bookTicket = document.getElementById("bookTicket");
 const buyTicket = document.getElementById("buyTicket");
 
@@ -49,17 +59,17 @@ seats.forEach((e) => {
   });
 });
 
-movie.addEventListener("change", (e) => {
-  console.log("changed");
-  console.log(movie.value);
-  movieName = movie.value;
-  console.log(movieName);
-});
+// movie.addEventListener("change", (e) => {
+//   console.log("changed");
+//   console.log(movie.value);
+//   movieName = movie.value;
+//   console.log(movieName);
+// });
 
 const postSeat = async () => {
   let config = {
     // replace the publicKey with yours
-    publicKey: "test_public_key_324aa259e74742f496ae5c707c388b98",
+    publicKey: "your public key",
     productIdentity: "1234567890",
     productName: "Dragon",
     productUrl: "http://gameofthrones.wikia.com/wiki/Dragons",
@@ -71,8 +81,15 @@ const postSeat = async () => {
       "SCT",
     ],
     eventHandler: {
-      onSuccess(payload) {
+      async onSuccess(payload) {
         // hit merchant api for initiating verfication
+        const { data } = await axios.post("http://localhost:8000/movies/ticket", {
+          // movieName,
+          totalPrice,
+          ticketPrice,
+          // totalSeatCount,
+          seatSelectedNumber,
+        });
         console.log(payload);
       },
       onError(error) {
@@ -84,19 +101,18 @@ const postSeat = async () => {
     },
   };
 
-  movieName = movie.value;
+  // movieName = movie.value;
   var checkout = new KhaltiCheckout(config);
   console.log("checkout");
   console.log(checkout);
-  checkout.show({ amount: 1000 });
-  const { data } = await axios.post("http://localhost:8000/movies/ticket", {
-    movieName,
-    totalPrice,
-    ticketPrice,
-    totalSeatCount,
-    seatSelectedNumber,
-  });
+  checkout.show({ amount: totalPrice * 100 });
+  // const { data } = await axios.post("http://localhost:8000/movies/ticket", {
+  //   // movieName,
+  //   totalPrice,
+  //   ticketPrice,
+  //   // totalSeatCount,
+  //   seatSelectedNumber,
+  // });
 
   console.log(data);
-  // buyTicket.href("/");
 };
