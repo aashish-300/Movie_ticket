@@ -19,17 +19,18 @@ movieDate.addEventListener("change", () => {
 const BookTicketfunc = async () => {
   console.log("inside box ticket");
   console.log(date);
+  const { data } = await axios.post(
+    "http://localhost:8000/movies/ticket/date",
+    {
+      date,
+    }
+  );
   if(movieDate.value === ""){
     alert('please select a date');
   }else {
     bookTicket.href = '/seatView'
   }
-  const { data } = await axios.post(
-    "http://127.0.0.1:8000/movies/ticket/date",
-    {
-      date,
-    }
-  );
+
   console.log(data);
   // fetch("http://127.0.0.1:8000/movies/ticket/date", {
   //   method: "POST",

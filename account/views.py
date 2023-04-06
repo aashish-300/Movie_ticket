@@ -62,11 +62,14 @@ def deleteUser(request, id=None):
         
 def movieDetails(request,id=None):
     movieData = Movies.objects.get(pk=id)
+    request.session['movie_title'] = movieData.movie_title
+    print(request.session['movie_title'])
     movieRec = {
         'movieData':movieData
     }
     
     return render(request,'Movies/movieDetails.html',movieRec)
+
 
 def viewTrailer(request,id=None):
     movieData = Movies.objects.get(pk=id)
@@ -77,10 +80,6 @@ def viewTrailer(request,id=None):
     return render(request,'Movies/viewTrailer.html',movieRec)
         
 
-   
-   
-    
-    
 
     
     

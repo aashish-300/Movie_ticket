@@ -1,0 +1,19 @@
+{
+  "name": "movie-ticket",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aashish-300/Movie_ticket.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aashish-300/Movie_ticket/issues"
+  },
+  "homepage": "https://github.com/aashish-300/Movie_ticket#readme"
+}

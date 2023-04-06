@@ -1,4 +1,5 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
@@ -6,69 +7,51 @@ from .models import Ticket
 import json
 
 
-# from django.views.generic import ListView, DetailView
-# from .models import Movies
-# # Create your views here.
-
-# class HomeView(ListView):
-#     model = Movies
-#     template_name = 'templates/index.html'
-# from Movies.forms import AddMovieForm
-# from django.views.generic import ListView, DetailView, CreateView
-
-# def addMovie(request):
-#     mydict={}
-#     form=AddMovieForm(request.POST or None)
-#     if form.is_valid():
-#         form.save()
-#         return redirect('home')
-#     else:
-#          print("Hello")
-#     mydict['form']=form
-#     return render(request,'templates/Movies/add_movie.html',mydict)
-
-# def buyTickets(request):
-#     data = request.body
-#     print(data)
-
 @csrf_exempt
-def ticket_date(request):
-    try:
-        if request.method == 'POST':
-            data = json.loads(request.body)
-            print(data)
-            date = data['date']
-            request.session['ticket_date'] = date
-            print(request.session['ticket_date'])
-            response = {
-                "status": 200,
-                "message": "success"
-            }
-            return render(request,'Movies/seatView.html', response)
-    except:
-        response = {
-            "error":"something went wrong"
-        }
-        return HttpResponse(response)
-        
+def seatView(request):
+    return render(request, "Movies/seatView.html")
+
+
+@login_required(login_url="signin")
 @csrf_exempt
 def book_ticket(request):
-    print('here')
-    if request.method == 'POST':
-        data = data = json.loads(request.body)
+    if request.method == "POST" :
+        print("Booking Ticket")
+        data = json.loads(request.body)
+        print(data)
         Ticket.objects.create(
-                movie_title = data['movieName'],
-                seat_number = data['seatSelectedNumber'],
-                price = data['ticketPrice'],
-                # total_selected_seats = data['totalSeatCount'],
-                # movie_date = request.session['ticket_date']
-                )
-        response = {
-                "message":"ticket saved!",
-                "status":200,
-                "payload":{}
-                }
-        return HttpResponse(response)    
-    return HttpResponse("Something went wrong!")
+            movie_title=request.session["movie_title"],
+            seat_number=" ".join(map(str, data["seatSelectedNumber"])),
+            price=data["totalPrice"],
+            total_selected_seats=data["totalSeatCount"],
+            movie_date=request.session["movie_date"],
+        )
+        print("ticket created successfully")
+        return HttpResponse(status=200)  # redirect('seatView')
+    return HttpResponse("<h3>Something went wrong!</h3>")
 
 
+# @login_required(login_url="signin")
+@csrf_exempt
+def ticket_date(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            date = data["date"]
+            print(date)
+            request.session["movie_date"] = date
+            movie_title = request.session["movie_title"]  # movie_date = date
+            print(movie_title)  # |
+            query_set = Ticket.objects.filter(movie_title="john wick").values_list(
+                "seat_number", flat=True
+            )  # no flat=True means it returns list of tuples
+            seats = list(query_set)
+            seats = " ".join(seats)
+            data = {"reserved_seats": seats}
+            print(data)
+            return render(request, "Movies/seatView.html", data)
+        except Exception as e:
+            print(e)
+            return HttpResponse("<h3>something went wrong</h3>") 
+    else:
+        return HttpResponse("<h3>Invalid request</h3>")

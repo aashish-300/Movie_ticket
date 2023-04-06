@@ -7,6 +7,12 @@ window.onload = async () => {
       console.log("booked");
     }
   });
+
+  // var btn = document.getElementById("bookTicket");
+  // btn.onclick = function () {
+  //   // minimum transaction amount must be 10, i.e 1000 in paisa.
+  //   checkout.show({ amount: 1000 });
+  // };
   // const seats = document.querySelectorAll(".seat:not(.reserved)");
 };
 const ReservedSeat = document.querySelectorAll(".seat");
@@ -51,7 +57,38 @@ movie.addEventListener("change", (e) => {
 });
 
 const postSeat = async () => {
+  let config = {
+    // replace the publicKey with yours
+    publicKey: "test_public_key_324aa259e74742f496ae5c707c388b98",
+    productIdentity: "1234567890",
+    productName: "Dragon",
+    productUrl: "http://gameofthrones.wikia.com/wiki/Dragons",
+    paymentPreference: [
+      "KHALTI",
+      "EBANKING",
+      "MOBILE_BANKING",
+      "CONNECT_IPS",
+      "SCT",
+    ],
+    eventHandler: {
+      onSuccess(payload) {
+        // hit merchant api for initiating verfication
+        console.log(payload);
+      },
+      onError(error) {
+        console.log(error);
+      },
+      onClose() {
+        console.log("widget is closing");
+      },
+    },
+  };
+
   movieName = movie.value;
+  var checkout = new KhaltiCheckout(config);
+  console.log("checkout");
+  console.log(checkout);
+  checkout.show({ amount: 1000 });
   const { data } = await axios.post("http://localhost:8000/movies/ticket", {
     movieName,
     totalPrice,
@@ -61,5 +98,5 @@ const postSeat = async () => {
   });
 
   console.log(data);
-  buyTicket.href("/");
+  // buyTicket.href("/");
 };
