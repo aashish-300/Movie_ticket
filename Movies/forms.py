@@ -1,6 +1,6 @@
 from django import forms
-from .models import Movies, movieCertificate, movieType, movieLanguage, movieShowtime
-
+from .models import Movies, movieCertificate, movieType, movieLanguage,movieShowtime, movieStatus
+# 
 
 class AddMovieForm(forms.ModelForm):
     
@@ -77,4 +77,10 @@ class AddMovieShowtime(forms.ModelForm):
 class movieForm(forms.ModelForm):
     class Meta:
         model = Movies
+        fields = "__all__"
+
+
+class addMovieStatus(forms.ModelForm):
+    class Meta:
+        model = movieStatus
         fields = "__all__"

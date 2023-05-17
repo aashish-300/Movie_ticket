@@ -60,6 +60,8 @@ seats.forEach((e) => {
 });
 
 const postSeat = async () => {
+  const price = buyTicket.getAttribute('data-movie-price')
+  console.log(price)
   let config = {
     // replace the publicKey with yours
     publicKey: "test_public_key_e93e921227564c0eada0cbac819042fa",
@@ -104,7 +106,7 @@ const postSeat = async () => {
   var checkout = new KhaltiCheckout(config);
   console.log("checkout");
   console.log(checkout);
-  checkout.show({ amount: totalPrice * 100 });
+  checkout.show({ amount: totalPrice * price });
 
 
  

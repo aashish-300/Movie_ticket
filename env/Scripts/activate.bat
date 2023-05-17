@@ -8,7 +8,7 @@ if defined _OLD_CODEPAGE (
     "%SystemRoot%\System32\chcp.com" 65001 > nul
 )
 
-set VIRTUAL_ENV=C:\Users\abish\OneDrive\Desktop\New folder\Movie_ticket\env
+set VIRTUAL_ENV=C:\Users\aashi\OneDrive\Desktop\Code\Movie_ticket\env
 
 if not defined PROMPT set PROMPT=$P$G
 

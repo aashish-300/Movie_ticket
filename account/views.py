@@ -11,12 +11,15 @@ import barcode
 from barcode.writer import ImageWriter
 from barcode import EAN13
 
+from django.http import HttpResponseRedirect
+
 from Movies.models import (
     Movies,
     movieCertificate,
     movieLanguage,
     movieShowtime,
     movieType,
+    movieStatus
  )
 from Movies.forms import (
      AddMovieForm,
@@ -68,27 +71,65 @@ def viewUser(request, id=None):
 
     return render(request, "accounts/viewUser.html", {"rec": rec})
 
-
+#@login_required(login_url="signin")
+@csrf_exempt
 def deleteUser(request, id):
+    print(id)
     user = get_object_or_404(MyUser, pk=id)
     print("Deleting user-------------------")
     print(user)
+    print(request.method)
     if request.method == "POST":
         user.delete()
         messages.success(request,"User Deleted Successfully")
-        return redirect("UserRecord")
-    return render(request, "accounts/deleteUser.html", {"user": user})
+        print('good')
+        return redirect("/UserRecord")
+    return HttpResponse('method not allowed')
 
-
+@login_required(login_url="signin")
 def movieDetails(request, id=None):
     movieData = Movies.objects.get(pk=id)
     request.session["movieId"] = id
     print("movie ID ",request.session["movieId"])
     request.session["movie_title"] = movieData.movie_title
     print(request.session["movie_title"])
+    print( movieData.movie_showtime.all())
     movieRec = {"movieData": movieData, "showtime": movieData.movie_showtime.all()}
 
     return render(request, "Movies/movieDetails.html", movieRec)
+
+@csrf_exempt
+def deleteCategory(request, id=None):
+    category = movieType.objects.get(id=id)
+    if request.method == "POST":
+        category.delete()
+        messages.success(request, "Category deleted successfully")
+        return redirect("movieTypeRecord")
+    return HttpResponse("Method not allowed!")
+
+@csrf_exempt
+def deleteMovie(request, id=None):
+    movie = Movies.objects.get(id=id)
+    if request.method == "POST":
+        movie.delete()
+        messages.success(request, "Movie deleted successfully")
+        return redirect("movieRecord")
+    return HttpResponse("Method not allowed!")
+
+
+
+
+def addMovieStatus(request):
+    if request.method == "POST":
+        form = addMovieStatus(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("movieCertificateRecord")
+        else:
+            print("Not Saved")
+    else:
+        form = addMovieStatus()
+    return render(request, "Movies/movieStatus.html", {"form": form})
 
 
 def viewTrailer(request, id=None):
@@ -204,11 +245,15 @@ def addMovieShowtime(request):
 # Create your views here.
 def home(request):
     first_name = ""
-    user_dict = request.session.get("user", None)
-    if user_dict is not None:
-        first_name = user_dict["first_name"]
-    movieData = Movies.objects.all()
-    data = {"first_name": first_name, "movieData": movieData}
+    uid = request.session.get("userId", None)
+    if uid is not None:
+        first_name = MyUser.objects.get(id=uid).first_name
+    
+    running = movieStatus.objects.get(id=1) #running
+    upcoming = movieStatus.objects.get(id=2) #upcoming
+    upcomingMovies = Movies.objects.filter(movie_status=upcoming)
+    runningMovies = Movies.objects.filter(movie_status=running)   
+    data = {"first_name": first_name, "upcomingMovies": upcomingMovies, "runningMovies": runningMovies}
     return render(request, "accounts/index.html", data)
 
 

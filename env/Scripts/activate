@@ -38,7 +38,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="C:\Users\abish\OneDrive\Desktop\New folder\Movie_ticket\env"
+VIRTUAL_ENV="C:\Users\aashi\OneDrive\Desktop\Code\Movie_ticket\env"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"

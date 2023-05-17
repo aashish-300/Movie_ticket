@@ -5,6 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 
 from .models import Ticket, Movies
+
 from account.models import MyUser
 import json
 
