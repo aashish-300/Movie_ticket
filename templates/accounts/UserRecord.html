@@ -32,13 +32,13 @@
     <td>{{rec.joining_date}}</td>
     <td>
       <a type="button" href="deleteUser{{rec.id}}" class="btn btn-danger" data-toggle="modal"
-        data-target="#exampleModalCenter">
+        data-target="#exampleModalCenter--{{rec.id}}">
         Delete
       </a>
 
       <!-- Modal -->
 
-      <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+      <div class="modal fade" id="exampleModalCenter--{{rec.id}}" tabindex="-1" role="dialog"
         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
@@ -53,10 +53,10 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <form class="deleteUser" method="post">
+              <form  method="post">
                 {% csrf_token %}
-                <button type="button" class="btn btn-primary" data-dismiss="modal" data-user-id={{rec.id}}
-                  id="deleteUser">Save
+                <button type="button" class="btn btn-primary deleteUser" data-dismiss="modal" data-user-id={{rec.id}}
+                  >Save
                   changes</button>
               </form>
             </div>

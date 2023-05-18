@@ -1,7 +1,7 @@
 {% extends "base1.html" %}
 
 {% block content %}{% load static %}
-<script defer src={% static 'js/deleteCategory.js' %}></script>
+<script defer src={% static 'js/deletecategory.js' %}></script>
 
 <h2 class="text-center">Category List<a href="addMovieType" class="btn btn-dark">Add Movie Category</a></h2>
 
@@ -25,12 +25,12 @@
 
         <td>
             <!-- Button trigger modal -->
-            <a href="deleteCategory{{rec.id}}" type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal">
+            <a href="deleteCategory{{rec.id}}" type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal--{{rec.id}}">
                 Delete
             </a>
 
             <!-- Modal -->
-            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            <div class="modal fade" id="exampleModal--{{rec.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
                 aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
@@ -45,7 +45,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary" data-dismiss="modal" id="deleteCategory" data-movie-id={{rec.id}}>Save changes</button>
+                            <button type="button" class="btn btn-primary deleteCategory" data-dismiss="modal" data-movie-id={{rec.id}}>Save changes</button>
                         </div>
                     </div>
                 </div>

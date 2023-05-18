@@ -31,30 +31,26 @@
 
 
 
-  <div class="container">
-    <div class="row">
+  <div class="container" style="margin:30px 10px">
+    <div class="row py-3" style="margin:auto;">
 
-      <div class="col-md-2 bg-light">
-
-        <nav class="nav flex-column">
-          <a class="nav-link active" aria-current="page" href="dashboard">Home</a>
-          <a class="nav-link" href="UserRecord">Customer</a>
-          <a class="nav-link" href="movieRecord">Movies</a>
-          <a class="nav-link" href="movieTypeRecord">Movie Categories</a>
-          <a class="nav-link" href="movieLanguageRecord">Movie Language</a>
-          <a class="nav-link" href="movieCertificateRecord">Movie Certification</a>
-          <a class="nav-link" href="movieShowtimeRecord">Movie Showtime</a>
-          <!-- <a class="nav-link" href="addMovieStatus">Movie status</a> -->
-
-
-        </nav>
-
-      </div>
-
-      <div class="col-lg-10">
+      <div class="col col-10" id="main">
         {% block content %}
 
         {% endblock %}
+      </div>
+      <div class="col-2 order-first" id="sticky-sidebar">
+        <div class="sticky-top">
+          <div class="nav flex-column">
+            <a class="nav-link active" aria-current="page" href="dashboard">Home</a>
+            <a class="nav-link" href="UserRecord">Customer</a>
+            <a class="nav-link" href="movieRecord">Movies</a>
+            <a class="nav-link" href="movieTypeRecord">Movie Categories</a>
+            <a class="nav-link" href="movieLanguageRecord">Movie Language</a>
+            <a class="nav-link" href="movieCertificateRecord">Movie Certification</a>
+            <a class="nav-link" href="movieShowtimeRecord">Movie Showtime</a>
+          </div>
+        </div>
       </div>
     </div>
   </div>

@@ -2,6 +2,7 @@
 
 {% block content %}{% load static %}
 <script defer src={% static 'js/deleteMovie.js' %}></script>
+<!-- <script defer src={% static 'js/modal.js' %}></script> -->
 
 
 <h2 class="text-center">Movies List <a href="addMovie" class="btn btn-dark">Add Movie</a></h2>
@@ -30,15 +31,15 @@
         <td>{{rec.movie_status}}</td>
         <td>{{rec.release_date}}</td>
         <td><a type="button" class="btn btn-primary" href="editMovieRecord{{rec.id}}">edit</a> /
-            <a type="button" href="deleteMovie{{rec.id}}" class="btn btn-danger" data-toggle="modal"
-                data-target="#exampleModalCenter">
+            <a type="button" href="deleteMovie{{rec.id}}" class="btn btn-danger"  data-toggle="modal"
+                data-target="#exampleModalCenter--{{rec.id}}">
                 Delete
             </a>
 
             <!-- Modal -->
 
-            <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
-                aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal fade" id="exampleModalCenter--{{rec.id}}" tabindex="-1" role="dialog"
+                aria-labelledby="exampleModalCenterTitle" aria-hidden="false">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -54,8 +55,9 @@
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             <form class="deleteUser" method="post">
                                 {% csrf_token %}
-                                <button type="button" class="btn btn-primary" data-dismiss="modal"
-                                    data-movie-id={{rec.id}} id="deleteMovie">Save
+                                <!-- <a type="button" class="btn btn-primary" id="deleteMovie" >Delete</a> -->
+                                <button type="button" class="btn btn-primary deleteMovie " data-movie-id={{rec.id}}
+                                     >Save
                                     changes</button>
                             </form>
                         </div>

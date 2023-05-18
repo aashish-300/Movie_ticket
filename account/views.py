@@ -7,11 +7,15 @@ from django.urls import reverse_lazy
 from django.views.decorators.csrf import csrf_exempt
 from .models import MyUser, otp
 from Movies.models import Ticket
+
 import barcode
 from barcode.writer import ImageWriter
 from barcode import EAN13
 
-from django.http import HttpResponseRedirect
+from io import BytesIO
+from django.template.loader import get_template
+
+from xhtml2pdf import pisa
 
 from Movies.models import (
     Movies,
@@ -34,13 +38,16 @@ from django.core.mail import send_mail
 from django.conf import settings
 
 import random
-import json
+
+from django.http import HttpResponse
 
 
 def dashboard(request):
+    print('helrjlk')
     UserCount = MyUser.objects.all().count()
     movieCount = Movies.objects.all().count()
     userRec = {"UserCount": UserCount, "movieCount": movieCount}
+    print(UserCount)
 
     return render(request, "accounts/dashboard.html", userRec)
 
@@ -105,6 +112,16 @@ def deleteCategory(request, id=None):
         category.delete()
         messages.success(request, "Category deleted successfully")
         return redirect("movieTypeRecord")
+    return HttpResponse("Method not allowed!")
+
+
+@csrf_exempt
+def deleteLanguage(request, id=None):
+    language = movieLanguage.objects.get(id=id)
+    if request.method == "POST":
+        language.delete()
+        messages.success(request, "language deleted successfully")
+        return redirect("movieLanguageRecord")
     return HttpResponse("Method not allowed!")
 
 @csrf_exempt
@@ -177,6 +194,13 @@ def movieCertificateRecord(request):
     certificateRec = {"certificateData": certificateData}
     return render(request, "Movies/movieCertificateRecord.html", certificateRec)
 
+@csrf_exempt
+def deleteCertificate(request, id=None):
+    certificate = movieCertificate.objects.get(id=id)
+    if request.method == "POST":
+        certificate.delete()
+        redirect("movieCertificateRecord")
+    return HttpResponse("Invalid request")
 
 def addMovieCertificate(request):
     if request.method == "POST":
@@ -230,6 +254,13 @@ def movieShowtimeRecord(request):
     showtimeRec = {"showtimeData": showtimeData}
     return render(request, "Movies/movieShowtimeRecord.html", showtimeRec)
 
+@csrf_exempt
+def deleteShowTime(request, id=None):
+    showTime = movieShowtime.objects.get(id=id)
+    if request.method == "POST":
+        showTime.delete()
+        redirect("movieShowtimeRecord")
+    return HttpResponse("Invalid request")
 
 def addMovieShowtime(request):
     if request.method == "POST":
@@ -375,9 +406,13 @@ def signout(request):
 def adminDashboard(request):
     userId = request.session.get("userId", None)
     if userId is not None:
+        UserCount = MyUser.objects.all().count()
+        ticketCount = Ticket.objects.all().count()
+        movieCount = Movies.objects.all().count()
+        userRec = {"UserCount": UserCount, "movieCount": movieCount,"ticketCount": ticketCount}
         user = MyUser.objects.get(id=userId)
         if user.is_superuser:
-            return render(request, "accounts/dashboard.html")
+            return render(request, "accounts/dashboard.html",userRec)
         else:
             return HttpResponse("Access Denied!!")
     else:
@@ -421,6 +456,35 @@ def myTickets(request):
             print(context)
             generate_barcode(ticketInfo)
             return render(request, "Movies/myTickets.html", context)
+        except Exception as e:
+            print(e)
+            return HttpResponse(f"Internal server error")
+    return HttpResponse("Invalid Method")
+
+
+
+def render_to_pdf(template_src, context_dict={}):
+    result = BytesIO()
+    template = get_template(template_src)
+    html  = template.render(context_dict)
+    pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result)
+    if not pdf.err:
+        return HttpResponse(result.getvalue(), content_type='application/pdf')
+    return None
+    
+
+
+@login_required(login_url="signin")
+def tickets(request):
+    if request.method == "GET":
+        try:
+            userId = request.session["userId"]
+            print(userId)
+            ticketInfo = Ticket.objects.filter(user=MyUser.objects.get(id=userId))
+            context = {"tickets": ticketInfo}
+            pdf = render_to_pdf('Movies/tickets.html', context)
+            print(context)
+            return HttpResponse(pdf, content_type='application/pdf')
         except Exception as e:
             print(e)
             return HttpResponse(f"Internal server error")
